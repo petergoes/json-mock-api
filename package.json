@@ -20,5 +20,8 @@
   "bugs": {
     "url": "https://github.com/petergoes/json-api-mock/issues"
   },
-  "homepage": "https://github.com/petergoes/json-api-mock#readme"
+  "homepage": "https://github.com/petergoes/json-api-mock#readme",
+  "dependencies": {
+    "express": "4.16.3"
+  }
 }
