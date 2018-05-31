@@ -1,0 +1,14 @@
+#!/usr/bin/env node
+
+const jsonMockApi = require('../index');
+const pkg = require('../package');
+const program = require('commander')
+	.version(pkg.version)
+	.description(`${pkg.name} (v${pkg.version}): ${pkg.description}`)
+	.usage('[options]')
+	.option('-p, --port [value]', 'Port', '3000')
+	.option('-d, --directory [value]', 'Directory', '.')
+	.parse(process.argv);
+
+
+jsonMockApi(program.port, program.directory)
