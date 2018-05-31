@@ -1,10 +1,11 @@
-# json-mock-api
+# Json Mock Api
 
-Mock an api with plain json files.
+Mock an api with plain json files. This simple CLI tool allows you to turn a 
+folder of static json files into a mock api server.
 
 ## Usage
 
-Without installing
+Without installing (using [npx](https://medium.com/@maybekatz/introducing-npx-an-npm-package-runner-55f7d4bd282b))
 
 ```bash
 npx json-mock-api --port 3000 --directory .
