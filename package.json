@@ -1,0 +1,24 @@
+{
+  "name": "json-api-mock",
+  "version": "0.1.0",
+  "description": "Mock a json api with plain json files",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/petergoes/json-api-mock.git"
+  },
+  "keywords": [
+    "json",
+    "api",
+    "mock"
+  ],
+  "author": "Peter Goes <petergoes@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/petergoes/json-api-mock/issues"
+  },
+  "homepage": "https://github.com/petergoes/json-api-mock#readme"
+}
