@@ -1,7 +1,7 @@
 {
   "name": "json-mock-api",
   "version": "0.1.1",
-  "description": "Mock a json api with plain json files",
+  "description": "Mock an api with plain json files",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
