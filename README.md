@@ -13,7 +13,7 @@ npx json-mock-api --port 3000 --directory .
 
 or 
 
-Add to your `json-mock-api` project ...
+Add `json-mock-api` to your project ...
 
 ```bash
 npm install --save json-mock-api
