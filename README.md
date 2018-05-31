@@ -73,8 +73,10 @@ When you access the endpoint `http://localhost:3000/api/user/1` via:
 * a PUT request, the file `./api/user/1.put.json` is returned
 * any other verb (GET, DELETE, ...), the file `./api/user/1.json` is returned
 
-
-
 ## Author
 
 Peter Goes ([@petergoes](https://twitter.com/petergoes)) - [petergoes.nl](https://petergoes.nl)
+
+## License
+
+[MIT](LICENSE)
