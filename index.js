@@ -15,8 +15,9 @@ function jsonMockApi(port, dir) {
   router.all('*', (req, res) => {
     const url = req.url
     const method = req.method.toLowerCase()
-    const [input, folder, file] = /(.+\/)([\w-]+)\/?$/.exec(url)
+    
     try {
+      const [input, folder = '.', file] = /(.+\/)?([\w-]+)\/?$/.exec(url)
       const filesInFolder = fs
         .readdirSync(path.join(FILES_DIR, folder))
         .filter(filterFiles(file))
@@ -44,7 +45,7 @@ function jsonMockApi(port, dir) {
       if (new RegExp('no such file').test(err.message)) {
         res
           .status(404)
-          .send({ error: `${input}.${method}.json or ${input}.json not found` })
+          .send({ error: `${url}.${method}.json or ${url}.json not found` })
       } else {
         res.status(500).send({ error: err.message })
       }
