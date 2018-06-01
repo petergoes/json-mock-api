@@ -5,7 +5,10 @@ folder of static json files into a mock api server.
 
 ## Usage
 
-Without installing (using [npx](https://medium.com/@maybekatz/introducing-npx-an-npm-package-runner-55f7d4bd282b))
+Without installing 
+(using [`npx`](https://medium.com/@maybekatz/introducing-npx-an-npm-package-runner-55f7d4bd282b)
+, shipped with [`npm@5.2.0`](https://github.com/npm/npm/releases/tag/v5.2.0) and 
+higher)
 
 ```bash
 npx json-mock-api --port 3000 --directory .
@@ -70,9 +73,9 @@ You can specify a HTTP Verb in the json file name like so:
 ```
 
 When you access the endpoint `http://localhost:3000/api/user/1` via:
-* a POST request, the file `./api/user/1.post.json` is returned
-* a PUT request, the file `./api/user/1.put.json` is returned
-* any other verb (GET, DELETE, ...), the file `./api/user/1.json` is returned
+* a `POST` request, the file `./api/user/1.post.json` is returned
+* a `PUT` request, the file `./api/user/1.put.json` is returned
+* any other verb (`GET`, `DELETE`, ...), the file `./api/user/1.json` is returned
 
 ## Author
 
