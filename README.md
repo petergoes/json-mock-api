@@ -1,4 +1,4 @@
-# Json Mock Api
+# Json Mock Api [![npm version](https://badge.fury.io/js/json-mock-api.svg)](https://www.npmjs.com/package/json-mock-api)
 
 Mock an api with plain json files. This simple CLI tool allows you to turn a 
 folder of static json files into a mock api server.
