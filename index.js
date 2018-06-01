@@ -6,7 +6,7 @@ const app = express()
 
 const router = Router()
 
-function jsonMockApi(port, dir) {
+function jsonMockApi(port, dir, middleware) {
   const PORT = port || 3000
   const FILES_DIR = path.join(process.cwd(), dir) || process.cwd()
 
@@ -55,7 +55,7 @@ function jsonMockApi(port, dir) {
   app.use(router)
 
   app.listen(PORT, () => {
-    console.log(`\n> Mock server running on port http://localhost:${PORT}\n`)
+    console.log(`\n> JsonMockServer running on port http://localhost:${PORT}\n`)
   })
 }
 

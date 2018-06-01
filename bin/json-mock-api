@@ -3,12 +3,26 @@
 const jsonMockApi = require('../index');
 const pkg = require('../package');
 const program = require('commander')
-	.version(pkg.version)
+	.version(pkg.version, '-v, --version')
 	.description(`${pkg.name} (v${pkg.version}): ${pkg.description}`)
 	.usage('[options]')
-	.option('-p, --port [value]', 'Port', '3000')
-	.option('-d, --directory [value]', 'Directory', '.')
-	.parse(process.argv);
+	.option('-d, --directory [path]', 'Directory', '.')
+	.option('-m, --middleware <files>', 'Expressjs middleware', list, [])
+	.option('-p, --port [number]', 'Port', '3000')
+	.on('-h', customHelp)
+	.on('--help', customHelp)
+	.parse(process.argv)
 
+function list(val) {
+	return val.split(',')
+}
+	
+function customHelp() {
+	console.log('')
+	console.log('  Examples:')
+	console.log('')
+	console.log('    $ json-mock-api --middleware ./middleware-1.js,./middleware-2.js')
+	console.log('')
+}
 
-jsonMockApi(program.port, program.directory)
+jsonMockApi(program.port, program.directory, program.middleware)
