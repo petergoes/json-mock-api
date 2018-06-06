@@ -77,6 +77,23 @@ When you access the endpoint `http://localhost:3000/api/user/1` via:
 * a `PUT` request, the file `./api/user/1.put.json` is returned
 * any other verb (`GET`, `DELETE`, ...), the file `./api/user/1.json` is returned
 
+## Custom middleware
+
+You can run your own [ExpressJS middleware](https://expressjs.com/en/guide/writing-middleware.html) 
+if you want to.
+
+To load your own middleware, use the `-m` or `--middleware` flags:
+
+```bash
+json-mock-api --middlware ./middlware-1.js,./middleware-2.js
+```
+
+The above command will load the files `middleware-1.js` and `middleware-2.js` 
+from the current working directory and use them in this order when a request is
+made before the response is send to the user.
+
+You could use your own middleware to, for example, add authentication.
+
 ## Author
 
 Peter Goes ([@petergoes](https://twitter.com/petergoes)) - [petergoes.nl](https://petergoes.nl)
