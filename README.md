@@ -3,6 +3,18 @@
 Mock an api with plain json files. This simple CLI tool allows you to turn a 
 folder of static json files into a mock api server.
 
+---
+
+**Table of Contents:**
+- [Json Mock Api](#json-mock-api)
+    - [Usage](#usage)
+    - [Options](#options)
+    - [The Json files](#the-json-files)
+    - [Handling different HTTP Verbs](#handling-different-http-verbs)
+    - [Custom middleware](#custom-middleware)
+    - [Author](#author)
+    - [License](#license)
+
 ## Usage
 
 Without installing 
@@ -36,6 +48,24 @@ npm install --save json-mock-api
 
 ```bash
 npm run mock
+```
+
+## Options
+
+```
+Usage: json-mock-api [options]
+
+Options:
+
+  -v, --version             output the version number
+  -d, --directory [path]    Directory (default: .)
+  -m, --middleware <files>  Expressjs middleware (default: )
+  -p, --port [number]       Port (default: 3000)
+  -h, --help                output usage information
+
+Examples:
+
+  $ json-mock-api --middleware ./middleware-1.js,./middleware-2.js
 ```
 
 ## The Json files
