@@ -3,6 +3,18 @@
 Mock an api with plain json files. This simple CLI tool allows you to turn a 
 folder of static json files into a mock api server.
 
+---
+
+**Table of Contents:**
+- [Json Mock Api](#json-mock-api)
+    - [Usage](#usage)
+    - [Options](#options)
+    - [The Json files](#the-json-files)
+    - [Handling different HTTP Verbs](#handling-different-http-verbs)
+    - [Custom middleware](#custom-middleware)
+    - [Author](#author)
+    - [License](#license)
+
 ## Usage
 
 Without installing 
@@ -36,6 +48,24 @@ npm install --save json-mock-api
 
 ```bash
 npm run mock
+```
+
+## Options
+
+```
+Usage: json-mock-api [options]
+
+Options:
+
+  -v, --version             output the version number
+  -d, --directory [path]    Directory (default: .)
+  -m, --middleware <files>  Expressjs middleware (default: )
+  -p, --port [number]       Port (default: 3000)
+  -h, --help                output usage information
+
+Examples:
+
+  $ json-mock-api --middleware ./middleware-1.js,./middleware-2.js
 ```
 
 ## The Json files
@@ -76,6 +106,23 @@ When you access the endpoint `http://localhost:3000/api/user/1` via:
 * a `POST` request, the file `./api/user/1.post.json` is returned
 * a `PUT` request, the file `./api/user/1.put.json` is returned
 * any other verb (`GET`, `DELETE`, ...), the file `./api/user/1.json` is returned
+
+## Custom middleware
+
+You can run your own [ExpressJS middleware](https://expressjs.com/en/guide/writing-middleware.html) 
+if you want to.
+
+To load your own middleware, use the `-m` or `--middleware` flags:
+
+```bash
+json-mock-api --middlware ./middlware-1.js,./middleware-2.js
+```
+
+The above command will load the files `middleware-1.js` and `middleware-2.js` 
+from the current working directory and use them in this order when a request is
+made before the response is send to the user.
+
+You could use your own middleware to, for example, add authentication.
 
 ## Author
 
