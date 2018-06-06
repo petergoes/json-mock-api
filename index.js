@@ -5,17 +5,30 @@ const Router = require('express').Router
 const app = express()
 
 const router = Router()
+const filterFiles = re => files => new RegExp(re).test(files)
+const isFunction = fn => typeof fn === 'function'
+const isNotFunction = fn => !isFunction(fn)
 
-function jsonMockApi(port, dir, middleware) {
-  const PORT = port || 3000
-  const FILES_DIR = path.join(process.cwd(), dir) || process.cwd()
+function loadUserMiddleware(middlewareFiles) {
+  const cwd = process.cwd()
+  return middlewareFiles
+    .map(middlewareFile => {
+      let fn = undefined
+      try {
+        fn = require(path.join(cwd, middlewareFile))
+      } catch (error) {
+        console.log(/Cannot find module/.test(error.message) ? error.message : error)
+        fn = middlewareFile
+      }
+      return fn
+    })
+}
 
-  const filterFiles = re => files => new RegExp(re).test(files)
-
-  router.all('*', (req, res) => {
+function createRouteHandler(PORT, FILES_DIR) {
+  return function routeHandler(req, res) {
     const url = req.url
     const method = req.method.toLowerCase()
-    
+  
     try {
       const [input, folder = '.', file] = /(.+\/)?([\w-]+)\/?$/.exec(url)
       const filesInFolder = fs
@@ -50,11 +63,29 @@ function jsonMockApi(port, dir, middleware) {
         res.status(500).send({ error: err.message })
       }
     }
-  })
+  }
+}  
+
+function jsonMockApi(port, dir, middleware) {
+  const PORT = port || 3000
+  const FILES_DIR = path.join(process.cwd(), dir) || process.cwd()
+  const routeHandler = createRouteHandler(PORT, FILES_DIR)
+  const userMiddleware = loadUserMiddleware(middleware)
+  const userMiddlewareLoaded = userMiddleware.filter(isFunction)
+  const userMiddlewareError = userMiddleware.filter(isNotFunction)
+
+  router.all('*', ...[...userMiddlewareLoaded, routeHandler])
 
   app.use(router)
 
   app.listen(PORT, () => {
+    if (userMiddlewareError.length) {
+      console.log('\n---\n')
+      console.log('Middleware not loaded (see errors above):\n')
+      userMiddlewareError.forEach(file => {
+        console.log(` * ${file}`)
+      });
+    }
     console.log(`\n> JsonMockServer running on port http://localhost:${PORT}\n`)
   })
 }
