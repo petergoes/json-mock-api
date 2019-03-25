@@ -26,11 +26,11 @@ function loadUserMiddleware(middlewareFiles) {
 
 function createRouteHandler(PORT, FILES_DIR) {
   return function routeHandler(req, res) {
-    const url = req.url
+    const url = req.url || ''
     const method = req.method.toLowerCase()
+    const cleanUrl = url.replace(/(\?.*)/, '') // strip query params
   
     try {
-      const cleanUrl = url.replace(/(\?.*)/, '') // strip query params
       const [input, folder = '.', file] = /(.+\/)?([\w-]+)\/?$/.exec(cleanUrl)
       const filesInFolder = fs
         .readdirSync(path.join(FILES_DIR, folder))
