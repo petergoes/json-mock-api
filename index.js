@@ -8,6 +8,7 @@ const router = Router()
 const filterFiles = re => files => new RegExp(re).test(files)
 const isFunction = fn => typeof fn === 'function'
 const isNotFunction = fn => !isFunction(fn)
+const noop = () => {}
 
 function loadUserMiddleware(middlewareFiles) {
   const cwd = process.cwd()
@@ -32,17 +33,40 @@ function createRouteHandler(PORT, FILES_DIR) {
   
     try {
       const [input, folder = '.', file] = /(.+\/)?([\w-]+)\/?$/.exec(cleanUrl)
-      const filesInFolder = fs
+      const allFilesInFolder = fs
         .readdirSync(path.join(FILES_DIR, folder))
-        .filter(filterFiles(file))
-        .filter(filterFiles(`${method}|${file}.[json|txt]`))
 
+      try {
+        const subfolder = fs.readdirSync(path.join(FILES_DIR, folder, file))
+        if (subfolder.length > 0) {
+          subfolder.forEach(subfile => allFilesInFolder.push(`${file}/${subfile}`))
+        }
+      } catch (err) {
+        noop()
+      }
+
+      const filesInFolder = allFilesInFolder
+        .filter(filterFiles(file))
+        .filter(filterFiles(`${method}|${file}(\/index)*.[json|txt]`))
+
+      const indexMethodFileJSON = filesInFolder.find(filterFiles(`${file}/.index.${method}.json`))
+      const indexMethodFileText = filesInFolder.find(filterFiles(`${file}/.index.${method}.txt`))
+      const indexFileJSON = filesInFolder.find(filterFiles(`${file}/.index.json`))
+      const indexFileText = filesInFolder.find(filterFiles(`${file}/.index.txt`))
       const methodFileJSON = filesInFolder.find(filterFiles(`.${method}.json`))
       const methodFileText = filesInFolder.find(filterFiles(`.${method}.txt`))
       const allFileJSON = filesInFolder.find(filterFiles(`${file}.json`))
       const allFileText = filesInFolder.find(filterFiles(`${file}.txt`))
 
-      if (methodFileJSON) {
+      if (indexMethodFileJSON) {
+        res.json(require(path.join(FILES_DIR, folder, indexMethodFileJSON)))
+      } else if (indexMethodFileText) {
+        res.send(fs.readFileSync(path.join(FILES_DIR, folder, indexMethodFileText)))
+      } else if (indexFileJSON) {
+        res.json(require(path.join(FILES_DIR, folder, indexFileJSON)))
+      } else if (indexFileText) {
+        res.send(fs.readFileSync(path.join(FILES_DIR, folder, indexFileText)))
+      } else if (methodFileJSON) {
         res.json(require(path.join(FILES_DIR, folder, methodFileJSON)))
       } else if (methodFileText) {
         res.send(fs.readFileSync(path.join(FILES_DIR, folder, methodFileText)))

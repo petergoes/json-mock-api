@@ -6,14 +6,14 @@ folder of static json files into a mock api server.
 ---
 
 **Table of Contents:**
-- [Json Mock Api](#json-mock-api)
-    - [Usage](#usage)
-    - [Options](#options)
-    - [The Json files](#the-json-files)
-    - [Handling different HTTP Verbs](#handling-different-http-verbs)
-    - [Custom middleware](#custom-middleware)
-    - [Author](#author)
-    - [License](#license)
+- [Json Mock Api ![npm version](https://www.npmjs.com/package/json-mock-api)](#json-mock-api-img-src%22httpswwwnpmjscompackagejson-mock-api%22-alt%22npm-version%22)
+  - [Usage](#usage)
+  - [Options](#options)
+  - [The Json files](#the-json-files)
+  - [Handling different HTTP Verbs](#handling-different-http-verbs)
+  - [Custom middleware](#custom-middleware)
+  - [Author](#author)
+  - [License](#license)
 
 ## Usage
 
@@ -76,6 +76,8 @@ Given this file structure:
 .
 └── api/
     ├── login.json
+    ├── product/
+    │   └── index.json
     ├── user/
     │   └── 1.json
     └── users.json
@@ -85,6 +87,7 @@ That results in the following endpoints:
 
 ```
 http://localhost:3000/api/login
+http://localhost:3000/api/products
 http://localhost:3000/api/user/1
 http://localhost:3000/api/users
 ```
