@@ -2,7 +2,9 @@ const fs = require('fs')
 const path = require('path')
 const express = require('express')
 const Router = require('express').Router
+const bodyParser = require('body-parser');
 const app = express()
+app.use(bodyParser);
 
 const router = Router()
 const filterFiles = re => files => new RegExp(re).test(files)

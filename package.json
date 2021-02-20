@@ -25,6 +25,7 @@
   },
   "homepage": "https://github.com/petergoes/json-mock-api#readme",
   "dependencies": {
+    "body-parser": "1.19.0",
     "commander": "2.15.1",
     "express": "4.16.3"
   }
