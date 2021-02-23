@@ -4,7 +4,8 @@ const express = require('express')
 const Router = require('express').Router
 const bodyParser = require('body-parser');
 const app = express()
-app.use(bodyParser);
+
+app.use(bodyParser.json());
 
 const router = Router()
 const filterFiles = re => files => new RegExp(re).test(files)
