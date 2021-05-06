@@ -35,7 +35,21 @@ function createRouteHandler(PORT, FILES_DIR) {
     const cleanUrl = url.replace(/(\?.*)/, '') // strip query params
   
     try {
-      const [input, folder = '.', file] = /(.+\/)?([\w-]+)\/?$/.exec(cleanUrl)
+      let input
+      let folder
+      let file
+      try {
+        const [_input, _folder = '.', _file] = /(.+\/)?([\w-]+)\/?$/.exec(cleanUrl)
+        input = _input
+        folder = _folder
+        file = _file
+      } catch (error) {
+        if (cleanUrl === '/') {
+          folder = '.'
+          file = 'index'
+        }
+      }
+
       const allFilesInFolder = fs
         .readdirSync(path.join(FILES_DIR, folder))
 
@@ -47,6 +61,7 @@ function createRouteHandler(PORT, FILES_DIR) {
       } catch (err) {
         noop()
       }
+
 
       const filesInFolder = allFilesInFolder
         .filter(filterFiles(file))
@@ -83,6 +98,7 @@ function createRouteHandler(PORT, FILES_DIR) {
           .send({ error: `${input}.${method}.json or ${input}.json not found` })
       }
     } catch (err) {
+      console.log(err)
       if (new RegExp('no such file').test(err.message)) {
         res
           .status(404)
