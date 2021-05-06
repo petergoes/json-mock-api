@@ -4,7 +4,8 @@
   "description": "Mock an api with plain json files",
   "main": "index.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "prepublish": "npm run test"
   },
   "bin": {
     "json-mock-api": "./bin/json-mock-api"
