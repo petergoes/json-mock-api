@@ -19,10 +19,12 @@ function list(val) {
 	
 function customHelp() {
 	console.log('')
-	console.log('  Examples:')
+	console.log('Examples:')
 	console.log('')
-	console.log('    $ json-mock-api --middleware ./middleware-1.js,./middleware-2.js')
+	console.log('  $ json-mock-api --middleware ./middleware-1.js,./middleware-2.js')
 	console.log('')
 }
 
-jsonMockApi(program.port, program.directory, program.middleware)
+const options = program.opts()
+
+jsonMockApi(options.port, options.directory || '', options.middleware || [])

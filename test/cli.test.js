@@ -4,22 +4,20 @@ const path = require('path')
 const pkg = require('../package.json')
 const jsonMockApi = path.join(__dirname, '..', 'bin/json-mock-api')
 
-const helpMenu = `
-  Usage: json-mock-api [options]
+const helpMenu = `Usage: json-mock-api [options]
 
-  ${pkg.name} (v${pkg.version}): ${pkg.description}
+${pkg.name} (v${pkg.version}): ${pkg.description}
 
-  Options:
+Options:
+  -v, --version             output the version number
+  -d, --directory [path]    Directory (default: ".")
+  -m, --middleware <files>  Expressjs middleware (default: [])
+  -p, --port [number]       Port (default: "3000")
+  -h, --help                display help for command
 
-    -v, --version             output the version number
-    -d, --directory [path]    Directory (default: .)
-    -m, --middleware <files>  Expressjs middleware (default: )
-    -p, --port [number]       Port (default: 3000)
-    -h, --help                output usage information
+Examples:
 
-  Examples:
-
-    $ json-mock-api --middleware ./middleware-1.js,./middleware-2.js
+  $ json-mock-api --middleware ./middleware-1.js,./middleware-2.js
 
 `
 
