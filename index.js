@@ -77,19 +77,19 @@ function createRouteHandler(PORT, FILES_DIR) {
       const allFileText = filesInFolder.find(filterFiles(`${file}.txt`))
 
       if (indexMethodFileJSON) {
-        res.json(require(path.join(FILES_DIR, folder, indexMethodFileJSON)))
+        res.json(JSON.parse(fs.readFileSync(path.join(FILES_DIR, folder, indexMethodFileJSON))))
       } else if (indexMethodFileText) {
         res.send(fs.readFileSync(path.join(FILES_DIR, folder, indexMethodFileText)))
       } else if (indexFileJSON) {
-        res.json(require(path.join(FILES_DIR, folder, indexFileJSON)))
+        res.json(JSON.parse(fs.readFileSync(path.join(FILES_DIR, folder, indexFileJSON))))
       } else if (indexFileText) {
         res.send(fs.readFileSync(path.join(FILES_DIR, folder, indexFileText)))
       } else if (methodFileJSON) {
-        res.json(require(path.join(FILES_DIR, folder, methodFileJSON)))
+        res.json(JSON.parse(fs.readFileSync(path.join(FILES_DIR, folder, methodFileJSON))))
       } else if (methodFileText) {
         res.send(fs.readFileSync(path.join(FILES_DIR, folder, methodFileText)))
       } else if (allFileJSON) {
-        res.json(require(path.join(FILES_DIR, folder, allFileJSON)))
+        res.json(JSON.parse(fs.readFileSync(path.join(FILES_DIR, folder, allFileJSON))))
       } else if (allFileText) {
         res.send(fs.readFileSync(path.join(FILES_DIR, folder, allFileText)))
       } else {
