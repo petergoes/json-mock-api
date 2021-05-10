@@ -127,15 +127,26 @@ function jsonMockApi(port, dir, middleware) {
   app.listen(PORT, () => {
     if (userMiddlewareError.length) {
       console.log('\n---\n')
-      console.log('Middleware not loaded (see errors above):\n')
+    } else {
+      console.clear()
+    }
+    console.log(chalk.green(`Json Mock Api (v${pkg.version}) is running`))
+    console.log('')
+    if (userMiddlewareError.length === 0 && middleware.length) {
+      console.log('Middleware file(s) loaded:')
+      console.log('')
+      middleware.forEach(file => {
+        console.log(`  ${file}`)
+      })
+      console.log('')
+    } else if (userMiddlewareError.length) {
+      console.log(chalk.red('Middleware not loaded (see errors above):\n'))
       userMiddlewareError.forEach(file => {
         console.log(` * ${file}`)
       });
+      console.log('')
     }
-    console.clear()
-    console.log(chalk.green(`Json Mock Api (v${pkg.version}) is running`))
-    console.log('')
-    console.log(`You can now query json files in ${chalk.yellow(dir)}`)
+    console.log(`You can ${userMiddlewareError.length ? chalk.bold('still') : 'now'} query json files stored in ${chalk.yellow(`./${path.relative(process.cwd(), FILES_DIR)}`)}`)
     console.log('')
     console.log(`  ${chalk.bold('Endpoint')}: http://localhost:${chalk.bold(PORT)}`)
     console.log('')
