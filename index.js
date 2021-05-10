@@ -1,5 +1,7 @@
 const fs = require('fs')
+const pkg = require('./package.json')
 const path = require('path')
+const chalk = require('chalk')
 const express = require('express')
 const Router = require('express').Router
 const bodyParser = require('body-parser');
@@ -130,7 +132,13 @@ function jsonMockApi(port, dir, middleware) {
         console.log(` * ${file}`)
       });
     }
-    console.log(`\n> JsonMockServer running on port http://localhost:${PORT}\n`)
+    console.clear()
+    console.log(chalk.green(`Json Mock Api (v${pkg.version}) is running`))
+    console.log('')
+    console.log(`You can now query json files in ${chalk.yellow(dir)}`)
+    console.log('')
+    console.log(`  ${chalk.bold('Endpoint')}: http://localhost:${chalk.bold(PORT)}`)
+    console.log('')
   })
 }
 
