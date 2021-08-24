@@ -1,6 +1,6 @@
 {
   "name": "json-mock-api",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Mock an api with plain json files",
   "main": "index.js",
   "scripts": {
