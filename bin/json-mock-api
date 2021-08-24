@@ -6,6 +6,7 @@ const program = require('commander')
 	.version(pkg.version, '-v, --version')
 	.description(`${pkg.name} (v${pkg.version}): ${pkg.description}`)
 	.usage('[options]')
+  .option('-c, --cors', 'Enable CORS on al requests')
 	.option('-d, --directory [path]', 'Directory', '.')
 	.option('-m, --middleware <files>', 'Expressjs middleware', list, [])
 	.option('-p, --port [number]', 'Port', '3000')
@@ -27,4 +28,4 @@ function customHelp() {
 
 const options = program.opts()
 
-jsonMockApi(options.port, options.directory || '', options.middleware || [])
+jsonMockApi(options.port, options.directory || '', options.middleware || [], options.cors)

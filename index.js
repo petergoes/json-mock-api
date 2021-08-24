@@ -1,14 +1,12 @@
 const fs = require('fs')
 const pkg = require('./package.json')
 const path = require('path')
+const cors = require('cors')
 const chalk = require('chalk')
 const express = require('express')
 const Router = require('express').Router
 const bodyParser = require('body-parser');
 const app = express()
-
-app.use(bodyParser.json());
-
 const router = Router()
 const filterFiles = re => files => new RegExp(re).test(files)
 const isFunction = fn => typeof fn === 'function'
@@ -100,7 +98,10 @@ function createRouteHandler(PORT, FILES_DIR) {
           .send({ error: `${input}.${method}.json or ${input}.json not found` })
       }
     } catch (err) {
-      console.log(err)
+      console.log(chalk.red('Error:'))
+      console.log(err.message)
+      console.log('')
+
       if (new RegExp('no such file').test(err.message)) {
         res
           .status(404)
@@ -112,7 +113,7 @@ function createRouteHandler(PORT, FILES_DIR) {
   }
 }  
 
-function jsonMockApi(port, dir, middleware) {
+function jsonMockApi(port, dir, middleware, enableCors) {
   const PORT = port || 3000
   const FILES_DIR = path.join(process.cwd(), dir) || process.cwd()
   const routeHandler = createRouteHandler(PORT, FILES_DIR)
@@ -122,6 +123,8 @@ function jsonMockApi(port, dir, middleware) {
 
   router.all('*', ...[...userMiddlewareLoaded, routeHandler])
 
+  enableCors && app.use(cors())
+  app.use(bodyParser.json());
   app.use(router)
 
   app.listen(PORT, () => {
@@ -130,8 +133,20 @@ function jsonMockApi(port, dir, middleware) {
     } else {
       console.clear()
     }
+
     console.log(chalk.green(`Json Mock Api (v${pkg.version}) is running`))
     console.log('')
+
+    if (enableCors) {
+      console.log(`Cors is ${chalk.green('enabled')}`)
+      console.log('')
+    } else {
+      console.log('Cors is disabled.')
+      console.log(`  Enable it for all requests by adding the ${chalk.cyan('--cors')} flag,`)
+      console.log(`  or add your own middleware for more control.`)
+      console.log('')
+    }
+
     if (userMiddlewareError.length === 0 && middleware.length) {
       console.log('Middleware file(s) loaded:')
       console.log('')
