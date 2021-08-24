@@ -93,13 +93,18 @@ function createRouteHandler(PORT, FILES_DIR) {
       } else if (allFileText) {
         res.send(fs.readFileSync(path.join(FILES_DIR, folder, allFileText)))
       } else {
+        const now = new Date(Date.now())
+        console.log(chalk.red(`Error (${`${now.getHours()}`.padStart(2, '0')}:${`${now.getMinutes()}`.padStart(2, '0')}:${`${now.getSeconds()}`.padStart(2, '0')}):`))
+        console.log(`  ${chalk.yellow(`${input}.${method}.json`)} or ${chalk.yellow(`${input}.json`)} not found`)
+        console.log('')
         res
           .status(404)
           .send({ error: `${input}.${method}.json or ${input}.json not found` })
       }
     } catch (err) {
-      console.log(chalk.red('Error:'))
-      console.log(err.message)
+      const now = new Date(Date.now())
+      console.log(chalk.red(`Error (${`${now.getHours()}`.padStart(2, '0')}:${`${now.getMinutes()}`.padStart(2, '0')}:${`${now.getSeconds()}`.padStart(2, '0')}):`))
+      console.log(`  ${err.message}`)
       console.log('')
 
       if (new RegExp('no such file').test(err.message)) {
