@@ -6,6 +6,7 @@ const chalk = require('chalk')
 const express = require('express')
 const Router = require('express').Router
 const bodyParser = require('body-parser');
+const logErrors = require('./log-errors')
 const app = express()
 const router = Router()
 const filterFiles = re => files => new RegExp(re).test(files)
@@ -93,25 +94,28 @@ function createRouteHandler(PORT, FILES_DIR) {
       } else if (allFileText) {
         res.send(fs.readFileSync(path.join(FILES_DIR, folder, allFileText)))
       } else {
-        const now = new Date(Date.now())
-        console.log(chalk.red(`Error (${`${now.getHours()}`.padStart(2, '0')}:${`${now.getMinutes()}`.padStart(2, '0')}:${`${now.getSeconds()}`.padStart(2, '0')}):`))
-        console.log(`  ${chalk.yellow(`${input}.${method}.json`)} or ${chalk.yellow(`${input}.json`)} not found`)
-        console.log('')
+        logErrors(
+          `${chalk.yellow(`${input}.${method}.json`)} or ${chalk.yellow(`${input}.json`)} not found`,
+          404
+        )
         res
           .status(404)
           .send({ error: `${input}.${method}.json or ${input}.json not found` })
       }
     } catch (err) {
-      const now = new Date(Date.now())
-      console.log(chalk.red(`Error (${`${now.getHours()}`.padStart(2, '0')}:${`${now.getMinutes()}`.padStart(2, '0')}:${`${now.getSeconds()}`.padStart(2, '0')}):`))
-      console.log(`  ${err.message}`)
-      console.log('')
-
       if (new RegExp('no such file').test(err.message)) {
+        logErrors(
+          `${chalk.yellow(`${cleanUrl}.${method}.json`)} or ${chalk.yellow(`${cleanUrl}.json`)} not found`,
+          404
+        )
         res
           .status(404)
           .send({ error: `${cleanUrl}.${method}.json or ${cleanUrl}.json not found` })
       } else {
+        logErrors(
+          err.message,
+          500
+        )
         res.status(500).send({ error: err.message })
       }
     }
