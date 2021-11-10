@@ -10,6 +10,7 @@ ${pkg.name} (v${pkg.version}): ${pkg.description}
 
 Options:
   -v, --version             output the version number
+  -c, --cors                Enable CORS on al requests
   -d, --directory [path]    Directory (default: ".")
   -m, --middleware <files>  Expressjs middleware (default: [])
   -p, --port [number]       Port (default: "3000")

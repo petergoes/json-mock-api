@@ -6,128 +6,48 @@ const chalk = require('chalk')
 const express = require('express')
 const Router = require('express').Router
 const bodyParser = require('body-parser');
-const logErrors = require('./log-errors')
+const loadUserMiddleware = require('./load-user-middleware.js')
+const createRouteHandler = require('./create-route-handler.js')
 const app = express()
 const router = Router()
-const filterFiles = re => files => new RegExp(re).test(files)
-const isFunction = fn => typeof fn === 'function'
-const isNotFunction = fn => !isFunction(fn)
-const noop = () => {}
 
-function loadUserMiddleware(middlewareFiles) {
-  const cwd = process.cwd()
-  return middlewareFiles
-    .map(middlewareFile => {
-      let fn = undefined
-      try {
-        fn = require(path.join(cwd, middlewareFile))
-      } catch (error) {
-        console.log(/Cannot find module/.test(error.message) ? error.message : error)
-        fn = middlewareFile
-      }
-      return fn
-    })
-}
+/**
+ * Is the provided value of type function
+ * @param {any} value The value to be tested
+ * @returns {Boolean}
+ */
+const isFunction = value => typeof value === 'function'
 
-function createRouteHandler(PORT, FILES_DIR) {
-  return function routeHandler(req, res) {
-    const url = req.url || ''
-    const method = req.method.toLowerCase()
-    const cleanUrl = url.replace(/(\?.*)/, '') // strip query params
-  
-    try {
-      let input
-      let folder
-      let file
-      try {
-        const [_input, _folder = '.', _file] = /(.+\/)?([\w-]+)\/?$/.exec(cleanUrl)
-        input = _input
-        folder = _folder
-        file = _file
-      } catch (error) {
-        if (cleanUrl === '/') {
-          folder = '.'
-          file = 'index'
-        }
-      }
-
-      const allFilesInFolder = fs
-        .readdirSync(path.join(FILES_DIR, folder))
-
-      try {
-        const subfolder = fs.readdirSync(path.join(FILES_DIR, folder, file))
-        if (subfolder.length > 0) {
-          subfolder.forEach(subfile => allFilesInFolder.push(`${file}/${subfile}`))
-        }
-      } catch (err) {
-        noop()
-      }
-
-
-      const filesInFolder = allFilesInFolder
-        .filter(filterFiles(file))
-        .filter(filterFiles(`${method}|${file}(\/index)*.[json|txt]`))
-
-      const indexMethodFileJSON = filesInFolder.find(filterFiles(`${file}/index.${method}.json`))
-      const indexMethodFileText = filesInFolder.find(filterFiles(`${file}/index.${method}.txt`))
-      const indexFileJSON = filesInFolder.find(filterFiles(`${file}/index.json`))
-      const indexFileText = filesInFolder.find(filterFiles(`${file}/index.txt`))
-      const methodFileJSON = filesInFolder.find(filterFiles(`.${method}.json`))
-      const methodFileText = filesInFolder.find(filterFiles(`.${method}.txt`))
-      const allFileJSON = filesInFolder.find(filterFiles(`${file}.json`))
-      const allFileText = filesInFolder.find(filterFiles(`${file}.txt`))
-
-      if (indexMethodFileJSON) {
-        res.json(JSON.parse(fs.readFileSync(path.join(FILES_DIR, folder, indexMethodFileJSON))))
-      } else if (indexMethodFileText) {
-        res.send(fs.readFileSync(path.join(FILES_DIR, folder, indexMethodFileText)))
-      } else if (indexFileJSON) {
-        res.json(JSON.parse(fs.readFileSync(path.join(FILES_DIR, folder, indexFileJSON))))
-      } else if (indexFileText) {
-        res.send(fs.readFileSync(path.join(FILES_DIR, folder, indexFileText)))
-      } else if (methodFileJSON) {
-        res.json(JSON.parse(fs.readFileSync(path.join(FILES_DIR, folder, methodFileJSON))))
-      } else if (methodFileText) {
-        res.send(fs.readFileSync(path.join(FILES_DIR, folder, methodFileText)))
-      } else if (allFileJSON) {
-        res.json(JSON.parse(fs.readFileSync(path.join(FILES_DIR, folder, allFileJSON))))
-      } else if (allFileText) {
-        res.send(fs.readFileSync(path.join(FILES_DIR, folder, allFileText)))
-      } else {
-        logErrors(
-          `${chalk.yellow(`${input}.${method}.json`)} or ${chalk.yellow(`${input}.json`)} not found`,
-          404
-        )
-        res
-          .status(404)
-          .send({ error: `${input}.${method}.json or ${input}.json not found` })
-      }
-    } catch (err) {
-      if (new RegExp('no such file').test(err.message)) {
-        logErrors(
-          `${chalk.yellow(`${cleanUrl}.${method}.json`)} or ${chalk.yellow(`${cleanUrl}.json`)} not found`,
-          404
-        )
-        res
-          .status(404)
-          .send({ error: `${cleanUrl}.${method}.json or ${cleanUrl}.json not found` })
-      } else {
-        logErrors(
-          err.message,
-          500
-        )
-        res.status(500).send({ error: err.message })
-      }
-    }
-  }
-}  
+/**
+ * Is the provided value NOT of type function
+ * @param {any} value The value to be tested
+ * @returns Boolean
+ */
+const isNotFunction = value => !isFunction(value)
 
 function jsonMockApi(port, dir, middleware, enableCors) {
+  /** The port to listen to */
   const PORT = port || 3000
+
+  /** The directory where the JSON files are stored */
   const FILES_DIR = path.join(process.cwd(), dir) || process.cwd()
-  const routeHandler = createRouteHandler(PORT, FILES_DIR)
+
+  /**
+   * Express middleware function that finds and returns the desired file.
+   * If the file can't be found, it returns an error
+   */
+  const routeHandler = createRouteHandler(FILES_DIR)
+
+  /** 
+   * List of middleware functions provided by the user
+   * @type {function[]}
+   */
   const userMiddleware = loadUserMiddleware(middleware)
+
+  /** Array of the successfully loaded middleware */
   const userMiddlewareLoaded = userMiddleware.filter(isFunction)
+
+  /** Array of the middleware that failed to load */
   const userMiddlewareError = userMiddleware.filter(isNotFunction)
 
   router.all('*', ...[...userMiddlewareLoaded, routeHandler])
