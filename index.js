@@ -11,20 +11,17 @@ const createRouteHandler = require('./create-route-handler.js')
 const app = express()
 const router = Router()
 
-/**
- * Is the provided value of type function
- * @param {any} value The value to be tested
- * @returns {Boolean}
- */
-const isFunction = value => typeof value === 'function'
+const isFunction = require('./lib/is-function')
+const isNotFunction = require('./lib/is-not-function')
 
 /**
- * Is the provided value NOT of type function
- * @param {any} value The value to be tested
- * @returns Boolean
+ * Creates an api based on JSON or txt files.
+ * 
+ * @param {Number} port The port number to listen to
+ * @param {String} dir The directory where the JSON files are stored relative to cwd
+ * @param {String[]} middleware Array of paths to files containing middleware
+ * @param {Boolean} enableCors Should cors be enabled by default
  */
-const isNotFunction = value => !isFunction(value)
-
 function jsonMockApi(port, dir, middleware, enableCors) {
   /** The port to listen to */
   const PORT = port || 3000
@@ -40,7 +37,6 @@ function jsonMockApi(port, dir, middleware, enableCors) {
 
   /** 
    * List of middleware functions provided by the user
-   * @type {function[]}
    */
   const userMiddleware = loadUserMiddleware(middleware)
 

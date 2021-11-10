@@ -1,5 +1,11 @@
 const path = require('path')
 
+/**
+ * Loads middleware functions provided by the user
+ * 
+ * @param {String[]} middlewareFiles Paths to files to load, relative to `cwd`
+ * @returns {Function[]} Array of loaded middleware functions
+ */
 module.exports = function loadUserMiddleware(middlewareFiles) {
   const cwd = process.cwd()
   return middlewareFiles

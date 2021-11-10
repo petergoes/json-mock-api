@@ -4,14 +4,8 @@ const chalk = require('chalk')
 const logErrors = require('./log-errors')
 const express = require("express");
 
-/**
- * Tests if a provided filename matches a RegExp
- * @param {String} re String to be converted into a RegExp
- * @returns {function(string): boolean} A function executing the test
- */
-const filenameMatching = re => file => new RegExp(re).test(file)
-
-const noop = () => {}
+const filenameMatching = require('./lib/filename-matching')
+const noop = require('./lib/noop')
 
 /**
  * 
