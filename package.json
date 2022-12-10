@@ -31,7 +31,7 @@
     "chalk": "4.1.1",
     "commander": "7.2.0",
     "cors": "2.8.5",
-    "express": "4.17.1",
+    "express": "4.17.3",
     "lodash.debounce": "^4.0.8"
   },
   "devDependencies": {
