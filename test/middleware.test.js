@@ -7,8 +7,8 @@ const jsonMockApi = path.join(__dirname, '..', 'bin/json-mock-api')
 
 function generateChildProcess(
   { 
-    origin = 'http://localhost:5000',
-    options = ['-p', '5000', '-m', './middleware.js'],
+    origin = 'http://localhost:6000',
+    options = ['-p', '6000', '-m', './middleware.js'],
     cwd = path.join(__dirname, 'api')
   } = {}) {
   return new Promise((resolve, reject) => {
@@ -43,7 +43,7 @@ describe('Middleware', () => {
         expect(error).toBe(undefined)
       }
 
-      const middleware = await fetch('http://localhost:5000/middleware').then(res => res.text())
+      const middleware = await fetch('http://localhost:6000/middleware').then(res => res.text())
       child.kill()
       expect(middleware).toStrictEqual('Hello from middleware')
   })
